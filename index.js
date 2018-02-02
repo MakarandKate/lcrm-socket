@@ -20,7 +20,7 @@ io.on('connection', function(socket){
       };
       console.log("informing all admins");
       for(key in activeAdmins){
-        if(activeAdmins[key].product.indexOf(getActiveUsers[socket.handshake.query.prospectId].product)!=-1){
+        if(activeAdmins[key].product.indexOf(activeUsers[socket.handshake.query.prospectId].product)!=-1){
           activeAdmins[key].socket.emit('newUser',{"prospectId":socket.handshake.query.prospectId,"product":socket.handshake.query.product});
         }
       }  
@@ -34,8 +34,8 @@ io.on('connection', function(socket){
       var userList=[];
       console.log("sending userList");
       for(key in activeUsers){
-        if(activeAdmins[socket.handshake.query.adminId].product.indexOf(getActiveUsers[key].product)!=-1){
-          userList.push({"prospectId":key,"product":getActiveUsers[key].product});
+        if(activeAdmins[socket.handshake.query.adminId].product.indexOf(activeUsers[key].product)!=-1){
+          userList.push({"prospectId":key,"product":activeUsers[key].product});
         }
       }
       activeAdmins[socket.handshake.query.adminId].socket.emit('userList',userList);
