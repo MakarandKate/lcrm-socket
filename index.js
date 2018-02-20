@@ -64,6 +64,13 @@ io.on('connection', function(socket){
       }
     });
 
+    setInterval(function(){
+      for(key in activeAdmins){
+        console.log("polling to "+key);
+        activeAdmins[key].socket.emit('poll',{"boo","foo"});
+      }
+    },3000);
+
  
 });
 
