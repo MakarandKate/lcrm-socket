@@ -69,7 +69,7 @@ io.on('connection', function(socket){
         console.log("polling to "+key);
         activeAdmins[key].socket.emit('poll',{"boo","foo"});
       }
-    },3000);
+    },10000);
 
  
 });
