@@ -16,7 +16,7 @@ io.on('connection', function(socket){
       activeUsers[socket.handshake.query.prospectId]={
         product:socket.handshake.query.product,
         socket:socket,
-        url:handshake.query.url,
+        url:socket.handshake.query.url,
         timeStamp:new Date().getTime()
       };
       //console.log("informing all admins");
