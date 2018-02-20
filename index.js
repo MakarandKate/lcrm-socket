@@ -12,27 +12,27 @@ var activeAdmins={};
 io.on('connection', function(socket){
 	if(socket.handshake.query){
     if(socket.handshake.query.userType=="prospect"){
-      console.log("new prospect");
+      //console.log("new prospect");
       activeUsers[socket.handshake.query.prospectId]={
         product:socket.handshake.query.product,
         socket:socket,
+        url:handshake.query.url,
         timeStamp:new Date().getTime()
       };
-      console.log("informing all admins");
+      //console.log("informing all admins");
       for(key in activeAdmins){
         if(activeAdmins[key].product.indexOf(activeUsers[socket.handshake.query.prospectId].product)!=-1){
           activeAdmins[key].socket.emit('newUser',{"prospectId":socket.handshake.query.prospectId,"product":socket.handshake.query.product});
         }
       }  
     }else if(socket.handshake.query.userType=="admin"){
-      console.log("new admin");
+      //console.log("new admin");
       activeAdmins[socket.handshake.query.adminId]={
         socket:socket,
         product:socket.handshake.query.product,
         timeStamp:new Date().getTime()
       };
       var userList=[];
-      console.log("sending userList");
       for(key in activeUsers){
         if(activeAdmins[socket.handshake.query.adminId].product.indexOf(activeUsers[key].product)!=-1){
           userList.push({"prospectId":key,"product":activeUsers[key].product});
@@ -45,10 +45,7 @@ io.on('connection', function(socket){
   	socket.on('disconnect', function(){
       if(socket.handshake.query.userType=="prospect"){
         setTimeout(function(){
-          console.log("removing");
-          for(key in activeAdmins){
-            activeAdmins[key].socket.emit('userLeft',socket.handshake.query.prospectId)
-          }
+          io.emit('userLeft',socket.handshake.query.prospectId);
           delete activeUsers[socket.handshake.query.prospectId];
         },(5*60*1000));
       }else if(socket.handshake.query.userType=="admin"){
@@ -57,10 +54,12 @@ io.on('connection', function(socket){
   	});
 
     socket.on('prospectClaim',function(obj){
-      console.log("prospectClaim");
-      io.emit('xyz',obj);
+      io.emit('leadClaimed',obj);
     });
 
+    socket.on('paymentInit',function(obj){
+      io.emit('leadPayment',obj);
+    })
  
 });
 
