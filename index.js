@@ -65,10 +65,13 @@ io.on('connection', function(socket){
     });
 
     setInterval(function(){
+      socket.emit('poll',{"boo":"foo"});
+      /*
       for(key in activeAdmins){
         console.log("polling to "+key);
         activeAdmins[key].socket.emit('poll',{"boo":"foo"});
       }
+      */
     },10000);
 
  
