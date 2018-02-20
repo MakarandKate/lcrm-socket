@@ -58,21 +58,8 @@ io.on('connection', function(socket){
 
     socket.on('prospectClaim',function(obj){
       console.log("prospectClaim");
-      for(key in activeAdmins){
-        console.log("emitimg to "+key);
-        activeAdmins[key].socket.emit('leadClaimed',obj);
-      }
+      socket.emit('leadClaimed',obj);
     });
-
-    setInterval(function(){
-      socket.emit('poll',{"boo":"foo"});
-      /*
-      for(key in activeAdmins){
-        console.log("polling to "+key);
-        activeAdmins[key].socket.emit('poll',{"boo":"foo"});
-      }
-      */
-    },10000);
 
  
 });
