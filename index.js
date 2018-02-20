@@ -58,7 +58,7 @@ io.on('connection', function(socket){
 
     socket.on('prospectClaim',function(obj){
       console.log("prospectClaim");
-      socket.emit('leadClaimed',obj);
+      io.emit('xyz',obj);
     });
 
  
