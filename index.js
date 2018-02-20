@@ -58,6 +58,7 @@ io.on('connection', function(socket){
     });
 
     socket.on('paymentInit',function(obj){
+      console.log("paymentInit by :"+obj.prospectId);
       io.emit('leadPayment',obj);
     })
  
