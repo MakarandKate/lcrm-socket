@@ -15,6 +15,7 @@ io.on('connection', function(socket){
       //console.log("new prospect");
       activeUsers[socket.handshake.query.prospectId]={
         product:socket.handshake.query.product,
+        data:socket.handshake.query,
         socket:socket,
         url:socket.handshake.query.url,
         timeStamp:new Date().getTime()
@@ -22,7 +23,7 @@ io.on('connection', function(socket){
       //console.log("informing all admins");
       for(key in activeAdmins){
         if(activeAdmins[key].product.indexOf(activeUsers[socket.handshake.query.prospectId].product)!=-1){
-          activeAdmins[key].socket.emit('newUser',{"prospectId":socket.handshake.query.prospectId,"product":socket.handshake.query.product});
+          activeAdmins[key].socket.emit('newUser',{"prospectId":socket.handshake.query.prospectId,"product":socket.handshake.query.product,"data":socket.handshake.query});
         }
       }  
     }else if(socket.handshake.query.userType=="admin"){
@@ -35,7 +36,7 @@ io.on('connection', function(socket){
       var userList=[];
       for(key in activeUsers){
         if(activeAdmins[socket.handshake.query.adminId].product.indexOf(activeUsers[key].product)!=-1){
-          userList.push({"prospectId":key,"product":activeUsers[key].product});
+          userList.push({"prospectId":key,"product":activeUsers[key].product,"data":activeUsers[key].data});
         }
       }
       activeAdmins[socket.handshake.query.adminId].socket.emit('userList',userList);
@@ -47,7 +48,7 @@ io.on('connection', function(socket){
         setTimeout(function(){
           io.emit('userLeft',socket.handshake.query.prospectId);
           delete activeUsers[socket.handshake.query.prospectId];
-        },(5*60*1000));
+        },(30*60*1000));
       }else if(socket.handshake.query.userType=="admin"){
         delete activeAdmins[socket.handshake.query.adminId];
       }
