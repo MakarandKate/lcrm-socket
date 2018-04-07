@@ -12,19 +12,15 @@ var activeAdmins={};
 io.on('connection', function(socket){
 	if(socket.handshake.query){
     if(socket.handshake.query.userType=="prospect"){
-      console.log("new prospect");
-      console.log(socket.handshake.query);
       activeUsers[socket.handshake.query.prospectId]={
-        product:socket.handshake.query.product,
         data:socket.handshake.query,
         socket:socket,
-        url:socket.handshake.query.url,
         timeStamp:new Date().getTime()
       };
       //console.log("informing all admins");
       for(key in activeAdmins){
         if(activeAdmins[key].product.indexOf(activeUsers[socket.handshake.query.prospectId].product)!=-1){
-          activeAdmins[key].socket.emit('newUser',{"prospectId":socket.handshake.query.prospectId,"product":socket.handshake.query.product,"data":socket.handshake.query});
+          activeAdmins[key].socket.emit('newUser',{"data":socket.handshake.query});
         }
       }  
     }else if(socket.handshake.query.userType=="admin"){
@@ -37,7 +33,7 @@ io.on('connection', function(socket){
       var userList=[];
       for(key in activeUsers){
         if(activeAdmins[socket.handshake.query.adminId].product.indexOf(activeUsers[key].product)!=-1){
-          userList.push({"prospectId":key,"product":activeUsers[key].product,"data":activeUsers[key].data});
+          userList.push({"data":activeUsers[key].data});
         }
       }
       activeAdmins[socket.handshake.query.adminId].socket.emit('userList',userList);
