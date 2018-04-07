@@ -12,7 +12,8 @@ var activeAdmins={};
 io.on('connection', function(socket){
 	if(socket.handshake.query){
     if(socket.handshake.query.userType=="prospect"){
-      //console.log("new prospect");
+      console.log("new prospect");
+      console.log(socket.handshake.query);
       activeUsers[socket.handshake.query.prospectId]={
         product:socket.handshake.query.product,
         data:socket.handshake.query,
